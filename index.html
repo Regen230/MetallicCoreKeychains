@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MetalCore Keychains</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0b0b0b;
+  color: #fff;
+}
+
+header {
+  text-align: center;
+  padding: 25px;
+  background: #111;
+  border-bottom: 1px solid #333;
+}
+
+header h1 {
+  letter-spacing: 3px;
+}
+
+.hero {
+  text-align: center;
+  padding: 40px;
+}
+
+.hero h2 {
+  font-size: 34px;
+}
+
+.hero p {
+  color: #aaa;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.product {
+  background: #1a1a1a;
+  margin: 15px;
+  padding: 15px;
+  width: 260px;
+  border-radius: 12px;
+  border: 1px solid #333;
+  transition: 0.3s;
+}
+
+.product:hover {
+  transform: scale(1.05);
+}
+
+.product img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  background: silver;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+button:hover {
+  background: white;
+}
+
+#cart {
+  position: fixed;
+  right: 15px;
+  top: 15px;
+  background: #111;
+  padding: 15px;
+  width: 250px;
+  border-radius: 10px;
+  border: 1px solid #333;
+}
+
+#cart ul {
+  padding: 0;
+  list-style: none;
+}
+
+.cart-item {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.remove {
+  color: red;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.checkout {
+  margin-top: 10px;
+  background: limegreen;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>METALCORE KEYCHAINS</h1>
+</header>
+
+<div class="hero">
+  <h2>Forged in Steel. Built to Last.</h2>
+  <p>Premium metallic keychains crafted for style.</p>
+</div>
+
+<div id="cart">
+  <h3>🛒 Cart</h3>
+  <ul id="cart-items"></ul>
+  <p>Total: $<span id="total">0</span></p>
+  <button class="checkout" onclick="checkout()">Checkout</button>
+</div>
+
+<div class="container">
+
+  <div class="product">
+    <img src="https://via.placeholder.com/260x200">
+    <h3>Steel Core Classic</h3>
+    <p>$12</p>
+    <button onclick="addToCart('Steel Core Classic',12)">Add to Cart</button>
+  </div>
+
+  <div class="product">
+    <img src="https://via.placeholder.com/260x200">
+    <h3>Engraved Titanium Tag</h3>
+    <p>$18</p>
+    <button onclick="addToCart('Engraved Titanium Tag',18)">Add to Cart</button>
+  </div>
+
+  <div class="product">
+    <img src="https://via.placeholder.com/260x200">
+    <h3>Chrome Edge Luxury</h3>
+    <p>$25</p>
+    <button onclick="addToCart('Chrome Edge Luxury',25)">Add to Cart</button>
+  </div>
+
+</div>
+
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+function saveCart() {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function renderCart() {
+  const list = document.getElementById("cart-items");
+  list.innerHTML = "";
+  let total = 0;
+
+  cart.forEach((item, index) => {
+    total += item.price;
+
+    const li = document.createElement("li");
+    li.className = "cart-item";
+    li.innerHTML = `${item.name} - $${item.price}
+      <span class="remove" onclick="removeItem(${index})">❌</span>`;
+    list.appendChild(li);
+  });
+
+  document.getElementById("total").textContent = total;
+}
+
+function addToCart(name, price) {
+  cart.push({name, price});
+  saveCart();
+  renderCart();
+}
+
+function removeItem(index) {
+  cart.splice(index, 1);
+  saveCart();
+  renderCart();
+}
+
+function checkout() {
+  if(cart.length === 0){
+    alert("Cart is empty!");
+    return;
+  }
+
+  let message = "Order:\n";
+  let total = 0;
+
+  cart.forEach(item => {
+    message += `- ${item.name} ($${item.price})\n`;
+    total += item.price;
+  });
+
+  message += `Total: $${total}`;
+
+  navigator.clipboard.writeText(message);
+  alert("Order copied! Paste it to send your order.");
+}
+
+renderCart();
+</script>
+
+</body>
+</html>
